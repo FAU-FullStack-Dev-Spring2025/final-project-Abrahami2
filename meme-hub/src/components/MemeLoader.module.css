@@ -1,0 +1,126 @@
+/* src/components/MemeLoader.module.css */
+
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  text-align: center;
+  padding: 20px;
+}
+
+.loader {
+  margin-bottom: 20px;
+}
+
+.memeFrame {
+  width: 220px;
+  height: 220px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  position: relative;
+  overflow: hidden;
+}
+
+.topText, .bottomText {
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 24px;
+  color: white;
+  text-transform: uppercase;
+  text-shadow: 
+    2px 2px 0 #000,
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    0 2px 0 #000,
+    2px 0 0 #000,
+    0 -2px 0 #000,
+    -2px 0 0 #000;
+  letter-spacing: 1px;
+  z-index: 2;
+  text-align: center;
+}
+
+.spinnerContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.spinner {
+  width: 80px;
+  height: 80px;
+  border: 8px solid rgba(100, 65, 165, 0.3);
+  border-top: 8px solid #6441a5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+  animation: pulse 2s infinite;
+}
+
+/* Background animation */
+.memeFrame::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, #ff7700, #6441a5, #2196f3, #4caf50);
+  background-size: 400% 400%;
+  opacity: 0.3;
+  z-index: 1;
+  animation: gradientBG 15s ease infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@media (max-width: 768px) {
+  .memeFrame {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .topText, .bottomText {
+    font-size: 20px;
+  }
+  
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border-width: 6px;
+  }
+  
+  .loadingText {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,46 @@
+<svg width="300" height="120" viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg {
+        fill: #000;
+      }
+
+      .glow {
+        filter: url(#glow);
+      }
+
+      .text {
+        font-family: 'Impact', sans-serif;
+        font-size: 48px;
+        font-weight: bold;
+        fill: #f0f;
+        letter-spacing: 2px;
+      }
+
+      .glitch-red {
+        fill: #f00;
+        transform: translate(3px, -2px);
+        opacity: 0.7;
+      }
+
+      .glitch-blue {
+        fill: #0ff;
+        transform: translate(-3px, 2px);
+        opacity: 0.7;
+      }
+    </style>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#0ff"></feDropShadow>
+      <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#f0f"></feDropShadow>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="120" rx="20" class="bg"></rect>
+
+  <!-- Glitch layers -->
+  <text x="30" y="75" class="text glitch-red">MEME HUB</text>
+  <text x="30" y="75" class="text glitch-blue">MEME HUB</text>
+  <text x="30" y="75" class="text glow">MEME HUB</text>
+</svg>

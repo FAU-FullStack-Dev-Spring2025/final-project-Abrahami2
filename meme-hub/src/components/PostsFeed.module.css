@@ -1,0 +1,319 @@
+/* src/components/PostsFeed.module.css */
+
+.feedContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Filter Controls */
+.filterControls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.filterGroup {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filterLabel {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.filterButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filterButton {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterButton:hover {
+  background: #e0e0e0;
+}
+
+.activeFilter {
+  background: #6441a5;
+  color: white;
+  font-weight: bold;
+}
+
+/* Sort Controls */
+.sortControls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sortLabel {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+  font-weight: bold;
+  color: #333;
+}
+
+.sortButton {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  margin-right: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sortButton:hover {
+  background-color: #f0f0f0;
+}
+
+.sortButton svg {
+  margin-right: 5px;
+}
+
+.activeSort {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  color: #6441a5;
+}
+
+/* Memes Grid */
+.memesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.memeCard {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.memeCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.15);
+}
+
+.memeLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.memeImageContainer {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.memeImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.memeCard:hover .memeImage {
+  transform: scale(1.05);
+}
+
+.badgeContainer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.categoryBadge,
+.typeBadge,
+.repostBadge {
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.categoryBadge {
+  background: rgba(100, 65, 165, 0.8);
+}
+
+.typeBadge.question {
+  background: rgba(25, 118, 210, 0.8);
+}
+
+.typeBadge.opinion {
+  background: rgba(76, 175, 80, 0.8);
+}
+
+.repostBadge {
+  background: rgba(255, 87, 34, 0.8);
+}
+
+.postInfo {
+  padding: 15px;
+}
+
+.postTitle {
+  margin: 0 0 5px;
+  font-size: 1.2rem;
+  color: #333;
+  line-height: 1.3;
+  height: 3.1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.postAuthor {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.postStats {
+  display: flex;
+  justify-content: space-between;
+  color: #666;
+  font-size: 0.9rem;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.upvotes, .commentCount {
+  display: flex;
+  align-items: center;
+}
+
+.upvotes svg, .commentCount svg {
+  margin-right: 5px;
+}
+
+.timestamp {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.postActions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 15px;
+  border-top: 1px solid #eee;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1rem;
+  margin-left: 15px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.actionButton:hover {
+  color: #6441a5;
+}
+
+/* No Results */
+.noResults {
+  text-align: center;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.noResults h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.noResults p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.createButton {
+  display: inline-block;
+  background: #6441a5;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.createButton:hover {
+  background: #7e5bb7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .memesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .sortControls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .sortLabel {
+    margin-bottom: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .filterControls {
+    margin-bottom: 10px;
+  }
+  
+  .filterGroup {
+    padding: 10px;
+  }
+  
+  .filterLabel {
+    font-size: 0.9rem;
+  }
+  
+  .filterButton {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,36 @@
+/* src/components/CreatePostForm.module.css */
+
+.form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .input,
+  .textarea,
+  .button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  .input:focus,
+  .textarea:focus,
+  .button:focus {
+    outline: none;
+    border-color: #777;
+  }
+  
+  .button {
+    background: #0057a9e8;
+    color: white;
+    border: none;
+  }
+  
+  .button:hover {
+    background: #223a65;
+  }
+  

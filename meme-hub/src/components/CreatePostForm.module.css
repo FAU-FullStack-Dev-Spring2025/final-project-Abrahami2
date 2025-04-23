@@ -1,0 +1,131 @@
+/* src/components/CreatePostForm.module.css */
+
+.formContainer {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.formTitle {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+  font-family: 'Impact', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.userInfo {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #666;
+  background-color: #f8f8f8;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #eee;
+}
+
+.form {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.formHint {
+  margin-top: 5px;
+  font-size: 0.8rem;
+  color: #777;
+  font-style: italic;
+}
+
+.input,
+.textarea,
+.select,
+.button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.select {
+  background-color: white;
+  cursor: pointer;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus,
+.button:focus {
+  outline: none;
+  border-color: #6441a5;
+  box-shadow: 0 0 0 2px rgba(100, 65, 165, 0.2);
+}
+
+.button {
+  background: #6441a5;
+  color: white;
+  border: none;
+  font-weight: bold;
+  padding: 15px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+.button:hover {
+  background: #7e5bb7;
+}
+
+.button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.imagePreview {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.imagePreview p {
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #6441a5;
+}
+
+.imagePreview img {
+  max-width: 100%;
+  max-height: 300px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .form {
+    padding: 20px;
+  }
+  
+  .formTitle {
+    font-size: 1.5rem;
+  }
+}
