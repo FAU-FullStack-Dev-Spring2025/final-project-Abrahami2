@@ -1,12 +1,12 @@
 // src/components/Navbar.jsx
 import React, { useState, useContext } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { FaQuestion, FaComments } from "react-icons/fa";
 import memeLogo from "../memehub.svg";
 import styles from "./Navbar.module.css";
 import { UserContext } from "../contexts/UserContext";
-import { FaQuestion } from "react-icons/fa"; // Import icon for FAQ
 
-function NavBar({ userstate, setSearchTerm, searchTerm }) {
+function NavBar({ userstate, setSearchTerm, searchTerm, openChat }) {
   const [click, setClick] = useState(false);
   const location = useLocation();
   const { username } = useContext(UserContext);
@@ -64,8 +64,14 @@ function NavBar({ userstate, setSearchTerm, searchTerm }) {
               }
               onClick={handleClick}
             >
-              <FaQuestion className={styles.faqIcon} /> FAQ
+              <FaQuestion className={styles.navIcon} /> FAQ
             </NavLink>
+          </li>
+          {/* Add Chat Button */}
+          <li className={styles.navItem}>
+            <button className={styles.chatButton} onClick={openChat}>
+              <FaComments className={styles.navIcon} /> Chat
+            </button>
           </li>
           <li className={styles.userProfile}>
             <span className={styles.username}>{username}</span>
