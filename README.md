@@ -1,5 +1,5 @@
 # Web Development Final Project - Meme Hub
-https://memehubchan.netlify.app/
+[https://memehubchan.netlify.app/](https://memehubchanv2.netlify.app/)
 
 Submitted by: **Abraham Hamitou (Z23670356)**
 
@@ -43,7 +43,8 @@ Time spent: **4** hours spent in total
 
 ## Video Walkthrough
 
-<!-- Add your GIF walkthrough here -->
+![Project Demo](https://github.com/FAU-FullStack-Dev-Spring2025/final-project-Abrahami2/blob/main/luuul.gif?raw=true)
+
 
 ## Notes
 
