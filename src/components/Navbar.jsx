@@ -1,24 +1,34 @@
 // src/components/Navbar.jsx
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { FaQuestion, FaComments, FaShieldAlt } from "react-icons/fa";
+import { FaQuestion, FaComments, FaBars, FaTimes } from "react-icons/fa";
 import memeLogo from "../memehub.svg";
 import styles from "./Navbar.module.css";
 import { UserContext } from "../contexts/UserContext";
 
-function NavBar({ userstate, setSearchTerm, searchTerm, openChat }) {
-  const [click, setClick] = useState(false);
+function NavBar({ searchTerm, setSearchTerm, openChat }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const { userId, username } = useContext(UserContext);
+  const { username } = useContext(UserContext);
+  
+  // Close the mobile menu when route changes
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+  
+  // Close the mobile menu when window is resized to desktop size
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && menuOpen) {
+        setMenuOpen(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [menuOpen]);
 
-  // Simple check to see if user is an admin
-  // You can modify this based on your actual admin detection logic
-  const isAdmin = username && (
-    username.toLowerCase().includes('admin') || 
-    userId === '0fd9def3-c295-4c91-9522-3b340c89924d'
-  );
-
-  const handleClick = () => setClick(!click);
+  const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
     <nav className={styles.navbar}>
@@ -27,6 +37,15 @@ function NavBar({ userstate, setSearchTerm, searchTerm, openChat }) {
           <img src={memeLogo} alt="Meme Hub Logo" className={styles.icon} />
           Meme Hub
         </NavLink>
+
+        {/* Mobile menu toggle button */}
+        <button 
+          className={styles.menuToggle} 
+          onClick={toggleMenu}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+        >
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </button>
 
         {location.pathname === "/" && (
           <div className={styles.searchContainer}>
@@ -40,14 +59,13 @@ function NavBar({ userstate, setSearchTerm, searchTerm, openChat }) {
           </div>
         )}
 
-        <ul className={click ? `${styles.navMenu} ${styles.active}` : styles.navMenu}>
+        <ul className={`${styles.navMenu} ${menuOpen ? styles.active : ''}`}>
           <li className={styles.navItem}>
             <NavLink
               to="/"
               className={({ isActive }) => 
                 isActive ? `${styles.navLinks} ${styles.active}` : styles.navLinks
               }
-              onClick={handleClick}
             >
               Home
             </NavLink>
@@ -58,7 +76,6 @@ function NavBar({ userstate, setSearchTerm, searchTerm, openChat }) {
               className={({ isActive }) => 
                 isActive ? `${styles.navLinks} ${styles.active}` : styles.navLinks
               }
-              onClick={handleClick}
             >
               Create Meme
             </NavLink>
@@ -69,34 +86,20 @@ function NavBar({ userstate, setSearchTerm, searchTerm, openChat }) {
               className={({ isActive }) => 
                 isActive ? `${styles.navLinks} ${styles.active}` : styles.navLinks
               }
-              onClick={handleClick}
             >
               <FaQuestion className={styles.navIcon} /> FAQ
             </NavLink>
           </li>
-          {/* Add Admin Panel Link - Only visible to admins */}
-          {isAdmin && (
-            <li className={styles.navItem}>
-              <NavLink
-                to="/admin"
-                className={({ isActive }) => 
-                  isActive ? `${styles.navLinks} ${styles.active}` : styles.navLinks
-                }
-                onClick={handleClick}
-              >
-                <FaShieldAlt className={styles.navIcon} /> Admin
-              </NavLink>
-            </li>
-          )}
-          {/* Add Chat Button */}
           <li className={styles.navItem}>
             <button className={styles.chatButton} onClick={openChat}>
               <FaComments className={styles.navIcon} /> Chat
             </button>
           </li>
-          <li className={styles.userProfile}>
-            <span className={styles.username}>{username}</span>
-          </li>
+          {username && (
+            <li className={styles.userProfile}>
+              <span className={styles.username}>{username}</span>
+            </li>
+          )}
         </ul>
       </div>
     </nav>
