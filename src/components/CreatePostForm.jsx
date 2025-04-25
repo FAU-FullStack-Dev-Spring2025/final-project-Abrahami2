@@ -5,36 +5,118 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import styles from './CreatePostForm.module.css';
 
+// Text validation function
+const validateText = (text, options = {}) => {
+  const { 
+    maxLength = 500, 
+    repeatThreshold = 5, 
+    required = false 
+  } = options;
+  
+  // Skip validation if empty and not required
+  if ((!text || text.trim() === '') && !required) {
+    return { isValid: true };
+  }
+  
+  // Check if input is empty but required
+  if ((!text || text.trim() === '') && required) {
+    return { isValid: false, message: 'This field cannot be empty' };
+  }
+  
+  // Check if input is too long
+  if (text && text.length > maxLength) {
+    return { isValid: false, message: `Must be less than ${maxLength} characters` };
+  }
+  
+  // Check for repeated characters (e.g., "aaaaa")
+  const repeatedCharRegex = new RegExp(`(.)\\1{${repeatThreshold - 1},}`, 'g');
+  if (text && repeatedCharRegex.test(text)) {
+    return { isValid: false, message: 'Contains too many repeated characters' };
+  }
+  
+  return { isValid: true };
+};
+
 function CreatePostForm() {
   const { userId, username } = useContext(UserContext);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [memeCategory, setMemeCategory] = useState('funny');
-  const [postType, setPostType] = useState('meme'); // New field for post type (meme, question, opinion)
-  const [repostId, setRepostId] = useState(''); // New field for reposting
+  const [postType, setPostType] = useState('meme');
+  const [repostId, setRepostId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  // Validate form fields
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Validate title (required)
+    const titleValidation = validateText(title, { 
+      maxLength: 100, 
+      repeatThreshold: 4, 
+      required: true 
+    });
+    
+    if (!titleValidation.isValid) {
+      newErrors.title = titleValidation.message;
+    }
+    
+    // Validate content (optional)
+    if (content) {
+      const contentValidation = validateText(content, { 
+        maxLength: 2000, 
+        repeatThreshold: 5, 
+        required: false 
+      });
+      
+      if (!contentValidation.isValid) {
+        newErrors.content = contentValidation.message;
+      }
+    }
+    
+    // Add other validations as needed
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
+      // Create post data object with all required fields
       const postData = { 
         title, 
-        content, 
-        image_url: imageUrl, 
-        category: memeCategory,
-        post_type: postType,
         user_id: userId,
         username: username,
+        category: memeCategory,
+        post_type: postType,
         upvotes: 0,
         created_at: new Date(),
       };
       
-      // If this is a repost, add the repost_id field
-      if (repostId) {
+      // Only add content if it's not empty
+      if (content && content.trim() !== '') {
+        postData.content = content;
+      }
+      
+      // Only add image_url if it's not empty
+      if (imageUrl && imageUrl.trim() !== '') {
+        postData.image_url = imageUrl;
+      }
+      
+      // Only add repost_id if it's not empty
+      if (repostId && repostId.trim() !== '') {
         postData.repost_id = repostId;
       }
       
@@ -43,13 +125,20 @@ function CreatePostForm() {
         .insert([postData]);
         
       if (error) {
-        alert(`Error: ${error.message}`);
+        if (error.message.includes('content')) {
+          // If the error is related to the content field, show a specific error
+          setErrors({ 
+            form: 'There was an issue with the description field. Please try again with different text.' 
+          });
+        } else {
+          setErrors({ form: `Error: ${error.message}` });
+        }
       } else {
         alert('Post created successfully!');
         navigate('/');
       }
     } catch (err) {
-      alert(`Something went wrong: ${err.message}`);
+      setErrors({ form: `Something went wrong: ${err.message}` });
     } finally {
       setIsSubmitting(false);
     }
@@ -60,18 +149,29 @@ function CreatePostForm() {
       <h2 className={styles.formTitle}>Create a New Post</h2>
       <p className={styles.userInfo}>Posting as: <strong>{username}</strong></p>
       
+      {errors.form && (
+        <div className={styles.errorMessage}>{errors.form}</div>
+      )}
+      
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="title">Post Title *</label>
           <input
             id="title"
-            className={styles.input}
+            className={`${styles.input} ${errors.title ? styles.inputError : ''}`}
             type="text"
             placeholder="Give your post a catchy title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              // Clear error when user starts typing
+              if (errors.title) {
+                setErrors({...errors, title: null});
+              }
+            }}
             required
           />
+          {errors.title && <div className={styles.fieldError}>{errors.title}</div>}
         </div>
 
         <div className={styles.formGroup}>
@@ -127,12 +227,19 @@ function CreatePostForm() {
           <label htmlFor="content">Description (Optional)</label>
           <textarea
             id="content"
-            className={styles.textarea}
+            className={`${styles.textarea} ${errors.content ? styles.inputError : ''}`}
             placeholder="Add some context or description for your post"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => {
+              setContent(e.target.value);
+              // Clear error when user starts typing
+              if (errors.content) {
+                setErrors({...errors, content: null});
+              }
+            }}
             rows={4}
           />
+          {errors.content && <div className={styles.fieldError}>{errors.content}</div>}
         </div>
 
         <div className={styles.formGroup}>
