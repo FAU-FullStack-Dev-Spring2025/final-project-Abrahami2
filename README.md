@@ -49,6 +49,7 @@ Time spent: **4** hours spent in total
 ## Notes
 
 Describe any challenges encountered while building the app.
+I had a hard time blocking bots at first.
 
 ## License
 
