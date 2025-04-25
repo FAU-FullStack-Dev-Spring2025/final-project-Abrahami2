@@ -1,41 +1,10 @@
 // src/components/CreatePostForm.jsx
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
+import ReCAPTCHA from 'react-google-recaptcha';
 import styles from './CreatePostForm.module.css';
-
-// Text validation function
-const validateText = (text, options = {}) => {
-  const { 
-    maxLength = 500, 
-    repeatThreshold = 5, 
-    required = false 
-  } = options;
-  
-  // Skip validation if empty and not required
-  if ((!text || text.trim() === '') && !required) {
-    return { isValid: true };
-  }
-  
-  // Check if input is empty but required
-  if ((!text || text.trim() === '') && required) {
-    return { isValid: false, message: 'This field cannot be empty' };
-  }
-  
-  // Check if input is too long
-  if (text && text.length > maxLength) {
-    return { isValid: false, message: `Must be less than ${maxLength} characters` };
-  }
-  
-  // Check for repeated characters (e.g., "aaaaa")
-  const repeatedCharRegex = new RegExp(`(.)\\1{${repeatThreshold - 1},}`, 'g');
-  if (text && repeatedCharRegex.test(text)) {
-    return { isValid: false, message: 'Contains too many repeated characters' };
-  }
-  
-  return { isValid: true };
-};
 
 function CreatePostForm() {
   const { userId, username } = useContext(UserContext);
@@ -46,18 +15,94 @@ function CreatePostForm() {
   const [postType, setPostType] = useState('meme');
   const [repostId, setRepostId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
   const [errors, setErrors] = useState({});
+  const recaptchaRef = useRef(null);
   const navigate = useNavigate();
+
+  // Your actual site key
+  const RECAPTCHA_SITE_KEY = "6LeL6CQrAAAAAFTlRzHTx1RnZJlKtVDd0guu-EAK";
+
+  // Handle when captcha is completed
+  const handleCaptchaChange = (value) => {
+    console.log("Captcha value:", value);
+    // A value means the captcha was completed successfully
+    setCaptchaVerified(!!value);
+  };
+
+  // Validate text input
+  const validateInput = (text, options = {}) => {
+    // Default options
+    const defaults = {
+      maxLength: 500,
+      minLength: 1,
+      required: true,
+      maxRepeatedChars: 5,
+      fieldName: 'Text'
+    };
+    
+    // Merge defaults with provided options
+    const config = { ...defaults, ...options };
+    
+    // Check if input is empty or undefined
+    if (!text || text.trim() === '') {
+      if (config.required) {
+        return { 
+          isValid: false, 
+          message: `${config.fieldName} cannot be empty` 
+        };
+      } else {
+        return { isValid: true }; // Empty is allowed for optional fields
+      }
+    }
+    
+    // Check if input is too short
+    if (text.trim().length < config.minLength) {
+      return { 
+        isValid: false, 
+        message: `${config.fieldName} must be at least ${config.minLength} characters` 
+      };
+    }
+    
+    // Check if input is too long
+    if (text.length > config.maxLength) {
+      return { 
+        isValid: false, 
+        message: `${config.fieldName} must be less than ${config.maxLength} characters` 
+      };
+    }
+    
+    // Check for repeated characters (e.g., "aaaaa")
+    const repeatedCharRegex = new RegExp(`(.)\\1{${config.maxRepeatedChars - 1},}`, 'g');
+    if (repeatedCharRegex.test(text)) {
+      return { 
+        isValid: false, 
+        message: `${config.fieldName} contains too many repeated characters` 
+      };
+    }
+    
+    // Check for suspicious all-caps content
+    if (text === text.toUpperCase() && text.length > 10) {
+      return {
+        isValid: false,
+        message: 'Please avoid using all capital letters'
+      };
+    }
+    
+    return { isValid: true };
+  };
 
   // Validate form fields
   const validateForm = () => {
     const newErrors = {};
     
     // Validate title (required)
-    const titleValidation = validateText(title, { 
+    const titleValidation = validateInput(title, { 
       maxLength: 100, 
-      repeatThreshold: 4, 
-      required: true 
+      minLength: 3, 
+      required: true, 
+      maxRepeatedChars: 4, 
+      fieldName: 'Title' 
     });
     
     if (!titleValidation.isValid) {
@@ -65,21 +110,28 @@ function CreatePostForm() {
     }
     
     // Validate content (optional)
-    if (content) {
-      const contentValidation = validateText(content, { 
+    if (content && content.trim() !== '') {
+      const contentValidation = validateInput(content, { 
         maxLength: 2000, 
-        repeatThreshold: 5, 
-        required: false 
+        required: false, 
+        maxRepeatedChars: 5, 
+        fieldName: 'Description' 
       });
       
       if (!contentValidation.isValid) {
         newErrors.content = contentValidation.message;
       }
     }
+
+    // Check if captcha has been verified
+    if (!captchaVerified) {
+      newErrors.captcha = 'Please complete the CAPTCHA verification';
+    }
     
-    // Add other validations as needed
-    
+    // Set all errors
     setErrors(newErrors);
+    
+    // Return true if no errors found
     return Object.keys(newErrors).length === 0;
   };
 
@@ -94,7 +146,7 @@ function CreatePostForm() {
     setIsSubmitting(true);
     
     try {
-      // Create post data object with all required fields
+      // Create post data object with required fields
       const postData = { 
         title, 
         user_id: userId,
@@ -105,17 +157,15 @@ function CreatePostForm() {
         created_at: new Date(),
       };
       
-      // Only add content if it's not empty
+      // Only add optional fields if they have values
       if (content && content.trim() !== '') {
         postData.content = content;
       }
       
-      // Only add image_url if it's not empty
       if (imageUrl && imageUrl.trim() !== '') {
         postData.image_url = imageUrl;
       }
       
-      // Only add repost_id if it's not empty
       if (repostId && repostId.trim() !== '') {
         postData.repost_id = repostId;
       }
@@ -125,22 +175,26 @@ function CreatePostForm() {
         .insert([postData]);
         
       if (error) {
-        if (error.message.includes('content')) {
-          // If the error is related to the content field, show a specific error
-          setErrors({ 
-            form: 'There was an issue with the description field. Please try again with different text.' 
-          });
-        } else {
-          setErrors({ form: `Error: ${error.message}` });
-        }
-      } else {
-        alert('Post created successfully!');
-        navigate('/');
+        throw error;
       }
+      
+      alert('Post created successfully!');
+      navigate('/');
     } catch (err) {
-      setErrors({ form: `Something went wrong: ${err.message}` });
+      if (err.message.includes('repeated characters')) {
+        setErrors({ form: 'Your post contains spam patterns. Please revise and try again.' });
+      } else if (err.message.includes('Rate limit')) {
+        setErrors({ form: 'You are posting too frequently. Please try again later.' });
+      } else {
+        setErrors({ form: `Error: ${err.message}` });
+      }
     } finally {
       setIsSubmitting(false);
+      // Reset captcha
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+        setCaptchaVerified(false);
+      }
     }
   };
 
@@ -255,10 +309,19 @@ function CreatePostForm() {
           <p className={styles.formHint}>Leave empty if this is an original post</p>
         </div>
 
+        <div className={styles.captchaContainer}>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={RECAPTCHA_SITE_KEY}
+            onChange={handleCaptchaChange}
+          />
+          {errors.captcha && <div className={styles.fieldError}>{errors.captcha}</div>}
+        </div>
+
         <button 
           className={styles.button} 
           type="submit"
-          disabled={isSubmitting || !title}
+          disabled={isSubmitting || !title || !captchaVerified}
         >
           {isSubmitting ? 'Posting...' : 'Post'}
         </button>

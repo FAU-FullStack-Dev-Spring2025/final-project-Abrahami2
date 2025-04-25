@@ -1,7 +1,7 @@
 // src/components/Navbar.jsx
 import React, { useState, useContext } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { FaQuestion, FaComments } from "react-icons/fa";
+import { FaQuestion, FaComments, FaShieldAlt } from "react-icons/fa";
 import memeLogo from "../memehub.svg";
 import styles from "./Navbar.module.css";
 import { UserContext } from "../contexts/UserContext";
@@ -9,7 +9,14 @@ import { UserContext } from "../contexts/UserContext";
 function NavBar({ userstate, setSearchTerm, searchTerm, openChat }) {
   const [click, setClick] = useState(false);
   const location = useLocation();
-  const { username } = useContext(UserContext);
+  const { userId, username } = useContext(UserContext);
+
+  // Simple check to see if user is an admin
+  // You can modify this based on your actual admin detection logic
+  const isAdmin = username && (
+    username.toLowerCase().includes('admin') || 
+    userId === '0fd9def3-c295-4c91-9522-3b340c89924d'
+  );
 
   const handleClick = () => setClick(!click);
 
@@ -67,6 +74,20 @@ function NavBar({ userstate, setSearchTerm, searchTerm, openChat }) {
               <FaQuestion className={styles.navIcon} /> FAQ
             </NavLink>
           </li>
+          {/* Add Admin Panel Link - Only visible to admins */}
+          {isAdmin && (
+            <li className={styles.navItem}>
+              <NavLink
+                to="/admin"
+                className={({ isActive }) => 
+                  isActive ? `${styles.navLinks} ${styles.active}` : styles.navLinks
+                }
+                onClick={handleClick}
+              >
+                <FaShieldAlt className={styles.navIcon} /> Admin
+              </NavLink>
+            </li>
+          )}
           {/* Add Chat Button */}
           <li className={styles.navItem}>
             <button className={styles.chatButton} onClick={openChat}>

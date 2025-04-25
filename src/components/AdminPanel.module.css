@@ -1,0 +1,453 @@
+/* src/components/AdminPanel.module.css - Updated with Empty State Styling */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: #1b1b1b;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #e2e8f0;
+  }
+  
+  .title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #333;
+    color: #e2e8f0;
+  }
+  
+  .accessDenied {
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+  
+  .accessDenied h2 {
+    color: #e53e3e;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .statCard {
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .statNumber {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #3b82f6;
+    margin-bottom: 0.5rem;
+  }
+  
+  .statLabel {
+    font-size: 1rem;
+    color: #cbd5e0;
+  }
+  
+  .adminLinks {
+    margin-top: 2rem;
+  }
+  
+  .adminLinks h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #e2e8f0;
+  }
+  
+  .linkGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  .adminLink {
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+  
+  .adminLink:hover {
+    background-color: #3a3a3a;
+    transform: translateY(-2px);
+  }
+  
+  /* Styles for disabled links */
+  .disabledLink {
+    opacity: 0.8;
+    cursor: pointer;
+    background-color: #252525;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .disabledLink:hover {
+    background-color: #303030;
+  }
+  
+  .comingSoon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #4b5563;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .linkIcon {
+    font-size: 2rem;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .linkText h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.2rem;
+    color: #e2e8f0;
+  }
+  
+  .linkText p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #a0aec0;
+  }
+  
+  /* Styles for message alerts */
+  .message {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+  
+  .success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid #10b981;
+    color: #d1fae5;
+  }
+  
+  .error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    color: #fee2e2;
+  }
+  
+  .warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border: 1px solid #f59e0b;
+    color: #fef3c7;
+  }
+  
+  .info {
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 1px solid #3b82f6;
+    color: #dbeafe;
+  }
+  
+  /* Styles for sections */
+  .section {
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: #e2e8f0;
+  }
+  
+  /* Empty state styling */
+  .emptyState {
+    background-color: #222;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    margin: 1.5rem 0;
+    border: 1px dashed #444;
+  }
+  
+  .emptyState p {
+    color: #a0aec0;
+    margin: 0.5rem 0;
+  }
+  
+  /* Form elements */
+  .formGroup {
+    margin-bottom: 1rem;
+  }
+  
+  .formGroup label {
+    display: block;
+    color: #cbd5e0;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .formGroup input,
+  .formGroup select,
+  .textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: #e2e8f0;
+    font-size: 1rem;
+  }
+  
+  .textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .formHint {
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    color: #a0aec0;
+  }
+  
+  .button {
+    padding: 0.75rem 1.5rem;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+  }
+  
+  .button:hover {
+    background-color: #2563eb;
+  }
+  
+  .button:disabled {
+    background-color: #4b5563;
+    cursor: not-allowed;
+  }
+  
+  /* User Management Styles */
+  .searchBar {
+    margin-bottom: 1rem;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: #e2e8f0;
+    font-size: 1rem;
+  }
+  
+  .userList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .userItem {
+    background-color: #1a1a1a;
+    border-radius: 6px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .userInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .userName {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #e2e8f0;
+  }
+  
+  .userBadge {
+    background-color: #e53e3e;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+  
+  .userDetails {
+    font-size: 0.9rem;
+    color: #a0aec0;
+    margin: 0.5rem 0;
+  }
+  
+  .userActions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .actionButton {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .banButton {
+    background-color: #9c2222;
+    color: white;
+  }
+  
+  .banButton:hover {
+    background-color: #7f1d1d;
+  }
+  
+  .unbanButton {
+    background-color: #059669;
+    color: white;
+  }
+  
+  .unbanButton:hover {
+    background-color: #047857;
+  }
+  
+  .deleteButton {
+    background-color: #e53e3e;
+    color: white;
+  }
+  
+  .deleteButton:hover {
+    background-color: #c53030;
+  }
+  
+  .confirmButton {
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  
+  .confirmButton:hover {
+    background-color: #2563eb;
+  }
+  
+  .cancelButton {
+    background-color: #4b5563;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  
+  .cancelButton:hover {
+    background-color: #374151;
+  }
+  
+  /* Modal styles */
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modal h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #e2e8f0;
+    font-size: 1.3rem;
+  }
+  
+  .modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .statsGrid,
+    .linkGrid {
+      grid-template-columns: 1fr;
+    }
+    
+    .statNumber {
+      font-size: 2rem;
+    }
+    
+    .userInfo {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .userActions {
+      flex-direction: column;
+      width: 100%;
+    }
+    
+    .actionButton {
+      width: 100%;
+    }
+    
+    .modalActions {
+      flex-direction: column;
+    }
+    
+    .confirmButton,
+    .cancelButton {
+      width: 100%;
+    }
+  }
